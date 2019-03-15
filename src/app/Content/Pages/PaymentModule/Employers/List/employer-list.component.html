@@ -1,0 +1,30 @@
+
+<h1>
+  All Payment Users
+</h1>
+
+<table>
+  <thead>
+      <tr>
+          <th>Code</th>
+          <th>Name</th>
+          <th>City</th>
+          <th>Annual Salary</th>
+          <th>Address</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr *ngFor='let item of paymentUsers | async'>
+          <td>{{item.UserId}}</td>
+          <td>{{item.UserName}}</td>
+          <td>{{item.City}}</td>
+          <td>{{item.Amount}}</td>
+          <td>{{item.Address}}</td>
+      </tr>
+      <tr *ngIf="!paymentUsers || paymentUsers.length==0">
+          <td colspan="5">
+              No payment Users to display
+          </td>
+      </tr>
+  </tbody>
+</table>
