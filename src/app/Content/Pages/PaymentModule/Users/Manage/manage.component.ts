@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 @Component({
   selector: 'app-manage',
@@ -9,12 +9,14 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 export class ManageComponent implements OnInit {
 
   pageModel: FormGroup;
+  emailCharacterCounter: number;
 
   constructor(private _formBuilder: FormBuilder) { }
 
   ngOnInit() {
+
     this.pageModel = this._formBuilder.group({
-      myFullName: [''],
+      myFullName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(8)]],
       myEmail: [''],
       mySkills: this._formBuilder.group({
         skillName: [''],
@@ -22,6 +24,19 @@ export class ManageComponent implements OnInit {
         proficiency: ['']
       }),
     });
+
+    this.pageModel.get('myEmail').valueChanges.subscribe(value => {
+      this.emailCharacterCounter = value.length;
+    });
+
+    this.pageModel.valueChanges.subscribe(value => {
+      console.log(value);
+    });
+
+    this.pageModel.get('mySkills').valueChanges.subscribe(value => {
+      console.log(value);
+    });
+
   }
 
   onSubmit() {
