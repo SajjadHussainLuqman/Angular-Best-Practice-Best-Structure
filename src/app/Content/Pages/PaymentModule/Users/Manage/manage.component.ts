@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from "@angular/forms";
+import { FormBuilder, FormGroup } from "@angular/forms";
 
 @Component({
   selector: 'app-manage',
@@ -10,16 +10,16 @@ export class ManageComponent implements OnInit {
 
   pageModel: FormGroup;
 
-  constructor() { }
+  constructor(private _formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    this.pageModel = new FormGroup({
-      myFullName: new FormControl(),
-      myEmail: new FormControl(),
-      mySkills: new FormGroup({
-        skillName: new FormControl(),
-        experienceInYears: new FormControl(),
-        proficiency: new FormControl()
+    this.pageModel = this._formBuilder.group({
+      myFullName: [''],
+      myEmail: [''],
+      mySkills: this._formBuilder.group({
+        skillName: [''],
+        experienceInYears: [''],
+        proficiency: ['']
       }),
     });
   }
@@ -28,4 +28,23 @@ export class ManageComponent implements OnInit {
     console.log(this.pageModel.value);
   }
 
+  onLoadDataClick() {
+    this.pageModel.setValue({
+      myFullName: 'Sajjad Hussain',
+      myEmail: 'sajjadlogic@live.com',
+      mySkills: {
+        skillName: 'C#',
+        experienceInYears: 5,
+        proficiency: 'beginner'
+      }
+    });
+
+    // Partial Load then Use patchValue
+
+    // this.pageModel.patchValue({
+    //   myFullName: 'Sajjad Hussain',
+    //   myEmail: 'sajjadlogic@live.com'
+    // });
+
+  }
 }
