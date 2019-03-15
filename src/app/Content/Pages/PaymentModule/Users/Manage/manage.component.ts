@@ -8,15 +8,24 @@ import { FormGroup, FormControl } from "@angular/forms";
 })
 export class ManageComponent implements OnInit {
 
-  pageModel : FormGroup;
+  pageModel: FormGroup;
 
   constructor() { }
 
   ngOnInit() {
-    this.pageModel = new FormGroup({ 
-      myFullName : new FormControl(),
-      myEmail : new FormControl()
+    this.pageModel = new FormGroup({
+      myFullName: new FormControl(),
+      myEmail: new FormControl(),
+      mySkills: new FormGroup({
+        skillName: new FormControl(),
+        experienceInYears: new FormControl(),
+        proficiency: new FormControl()
+      }),
     });
+  }
+
+  onSubmit() {
+    console.log(this.pageModel.value);
   }
 
 }
