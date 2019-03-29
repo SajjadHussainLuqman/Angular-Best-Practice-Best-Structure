@@ -18,7 +18,7 @@ export class ManageComponent implements OnInit {
 
     this.pageModel = this._formBuilder.group({
       myFullName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(8)]],
-      contactPreference : ['email'],
+      contactPreference: ['email'],
       myEmail: ['', [Validators.required, Validators.email]],
       myPhone: [''],
       mySkills: this._formBuilder.group({
@@ -33,6 +33,11 @@ export class ManageComponent implements OnInit {
     this.pageModel.valueChanges.subscribe((data) => {
       this.logKeyValuePairs(this.pageModel);
     });
+
+    this.pageModel.get('contactPreference')
+      .valueChanges.subscribe((data: string) => {
+        this.onContactPrefernceChange(data);
+      });
 
   }
 
@@ -81,7 +86,7 @@ export class ManageComponent implements OnInit {
   formErrors = {
     'myFullName': '',
     'myEmail': '',
-    'myPhone' : '',
+    'myPhone': '',
     'skillName': '',
     'experienceInYears': '',
     'proficiency': ''
@@ -98,7 +103,7 @@ export class ManageComponent implements OnInit {
       'required': 'Email is required.',
       'email': 'Invalid Email'
     },
-    'myPhone' : {
+    'myPhone': {
       'required': 'Phone is required.',
       'minlength': 'Phone must be greater than 2 characters.',
     },
@@ -113,17 +118,16 @@ export class ManageComponent implements OnInit {
     },
   };
 
-// If the Selected Radio Button value is "phone", then add the
+  // If the Selected Radio Button value is "phone", then add the
   // required validator function otherwise remove it
   onContactPrefernceChange(selectedValue: string) {
-    debugger;
     const phoneFormControl = this.pageModel.get('myPhone');
     const emailFormControl = this.pageModel.get('myEmail');
     if (selectedValue === 'phone') {
-      phoneFormControl.setValidators([Validators.required,Validators.minLength(4)]);
+      phoneFormControl.setValidators([Validators.required, Validators.minLength(4)]);
       emailFormControl.clearValidators();
     } else {
-      emailFormControl.setValidators([Validators.required,Validators.email]);
+      emailFormControl.setValidators([Validators.required, Validators.email]);
       phoneFormControl.clearValidators();
     }
     phoneFormControl.updateValueAndValidity();
