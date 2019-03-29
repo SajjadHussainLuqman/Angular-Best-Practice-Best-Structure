@@ -6,10 +6,11 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
   templateUrl: './manage.component.html',
   styleUrls: ['./manage.component.css']
 })
+
+
 export class ManageComponent implements OnInit {
 
   pageModel: FormGroup;
-  emailCharacterCounter: number;
 
   constructor(private _formBuilder: FormBuilder) { }
 
@@ -17,7 +18,7 @@ export class ManageComponent implements OnInit {
 
     this.pageModel = this._formBuilder.group({
       myFullName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(8)]],
-      myEmail: [''],
+      myEmail: ['',[Validators.required,Validators.email]],
       mySkills: this._formBuilder.group({
         skillName: [''],
         experienceInYears: [''],
@@ -25,23 +26,34 @@ export class ManageComponent implements OnInit {
       }),
     });
 
-    this.pageModel.get('myEmail').valueChanges.subscribe(value => {
-      this.emailCharacterCounter = value.length;
-    });
-
-    this.pageModel.valueChanges.subscribe(value => {
-      console.log(value);
-    });
-
-    this.pageModel.get('mySkills').valueChanges.subscribe(value => {
-      console.log(value);
-    });
-
   }
 
   onSubmit() {
-    console.log(this.pageModel.value);
+    this.logKeyValuePairs(this.pageModel);
   }
+
+  logKeyValuePairs(group: FormGroup): void {
+
+    Object.keys(group.controls).forEach((key: string) => {
+
+      // Get a reference to the control using the FormGroup.get() method
+      const abstractControl = group.get(key);
+
+      // If the control is an instance of FormGroup i.e a nested FormGroup
+      // then recursively call this same method (logKeyValuePairs) passing it
+      // the FormGroup so we can get to the form controls in it
+
+      if (abstractControl instanceof FormGroup) {
+        this.logKeyValuePairs(abstractControl);
+        // If the control is not a FormGroup then we know it's a FormControl
+      }
+      else {
+        console.log('Key = ' + key + ' && Value = ' + abstractControl.value);
+      }
+
+    });
+  }
+
 
   onLoadDataClick() {
     this.pageModel.setValue({
