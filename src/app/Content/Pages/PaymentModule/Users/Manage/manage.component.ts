@@ -30,7 +30,6 @@ export class ManageComponent implements OnInit {
 
   onSubmit() {
     this.logKeyValuePairs(this.pageModel);
-    console.log(this.formErrors);
   }
 
   logKeyValuePairs(group: FormGroup): void {
