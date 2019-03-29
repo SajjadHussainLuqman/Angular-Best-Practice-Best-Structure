@@ -26,13 +26,19 @@ export class ManageComponent implements OnInit {
       }),
     });
 
+    // When any of the form control value in employee form changes
+    // our validation function logValidationErrors() is called
+    this.pageModel.valueChanges.subscribe((data) => {
+      this.logKeyValuePairs(this.pageModel);
+    });
+
   }
 
   onSubmit() {
     this.logKeyValuePairs(this.pageModel);
   }
 
-  logKeyValuePairs(group: FormGroup): void {
+  logKeyValuePairs(group: FormGroup = this.pageModel): void {
 
     Object.keys(group.controls).forEach((key: string) => {
 
@@ -52,19 +58,16 @@ export class ManageComponent implements OnInit {
 
         // Clear the existing validation errors
         this.formErrors[key] = '';
-        if (abstractControl && !abstractControl.valid) {
-          // Get all the validation messages of the form control
-          // that has failed the validation
+        if (abstractControl && !abstractControl.valid && (abstractControl.touched || abstractControl.dirty)) {
+
           const messages = this.validationMessages[key];
-          // Find which validation has failed. For example required,
-          // minlength or maxlength. Store that error message in the
-          // formErrors object. The UI will bind to this object to
-          // display the validation errors
+         
           for (const errorKey in abstractControl.errors) {
             if (errorKey) {
               this.formErrors[key] += messages[errorKey] + ' ';
             }
           }
+
         }
       }
 
@@ -89,7 +92,8 @@ export class ManageComponent implements OnInit {
       'maxlength': 'Full Name must be less than 8 characters.'
     },
     'myEmail': {
-      'required': 'Email is required.'
+      'required': 'Email is required.',
+      'email' : 'Invalid Email'
     },
     'skillName': {
       'required': 'Skill Name is required.',
