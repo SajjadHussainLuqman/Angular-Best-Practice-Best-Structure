@@ -23,11 +23,11 @@ export class ManageComponent implements OnInit {
       emailGroup: this._formBuilder.group({
         myEmail: ['', [Validators.required, Validators.email, CustomValidators.emailDomain("google.com")]],
         myEmailConfirm: ['', [Validators.required]],
-      }, { validators: MatchControlsValue("myEmail","myEmailConfirm") }),
+      }, { validators: CustomValidators.MatchControlsValue("myEmail","myEmailConfirm") }),
       passwordGroup: this._formBuilder.group({
         myPassword: ['', [Validators.required]],
         myPasswordConfirm: ['', [Validators.required]],
-      }, { validators: MatchControlsValue("myPassword","myPasswordConfirm") }),
+      }, { validators: CustomValidators.MatchControlsValue("myPassword","myPasswordConfirm") }),
       myPhone: [''],
       mySkills: this._formBuilder.group({
         skillName: ['', [Validators.required]],
@@ -171,15 +171,3 @@ export class ManageComponent implements OnInit {
   }
 }
 
-function MatchControlsValue(Control1Name:string,Control2Name:string){
-  return (group: AbstractControl): { [Key: string]: any } | null => {
-    const Control1 = group.get(Control1Name);
-    const Control2 = group.get(Control2Name);
-    if (Control1.value === Control2.value || Control2.pristine) {
-      return null;
-    }
-    else {
-      return { 'NotMatch': true }
-    }
-  }
-}
