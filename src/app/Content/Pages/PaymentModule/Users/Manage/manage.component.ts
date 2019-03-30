@@ -27,7 +27,7 @@ export class ManageComponent implements OnInit {
       passwordGroup: this._formBuilder.group({
         myPassword: ['', [Validators.required]],
         myPasswordConfirm: ['', [Validators.required]],
-      }, { validators: MatchPasswords }),
+      }, { validators: MatchControlsValue("myPassword","myPasswordConfirm") }),
       myPhone: [''],
       mySkills: this._formBuilder.group({
         skillName: ['', [Validators.required]],
@@ -124,7 +124,7 @@ export class ManageComponent implements OnInit {
       'required': 'Password Confirm is required.',
     },
     'passwordGroup': {
-      'NotMatchPasswords': 'Password and Confirm Password do not match'
+      'NotMatch': 'Password and Confirm Password do not match'
      },
     'myPhone': {
       'required': 'Phone is required.',
@@ -184,14 +184,15 @@ function MatchEmails(group: AbstractControl): { [Key: string]: any } | null {
 
 }
 
-function MatchPasswords(group: AbstractControl): { [Key: string]: any } | null {
-  const PasswordControl = group.get("myPassword");
-  const PasswordConfirmControl = group.get("myPasswordConfirm");
-  if (PasswordControl.value === PasswordConfirmControl.value || PasswordConfirmControl.pristine) {
-    return null;
+function MatchControlsValue(Control1Name:string,Control2Name:string){
+  return (group: AbstractControl): { [Key: string]: any } | null => {
+    const Control1 = group.get(Control1Name);
+    const Control2 = group.get(Control2Name);
+    if (Control1.value === Control2.value || Control2.pristine) {
+      return null;
+    }
+    else {
+      return { 'NotMatch': true }
+    }
   }
-  else {
-    return { 'NotMatchPasswords': true }
-  }
-
 }
