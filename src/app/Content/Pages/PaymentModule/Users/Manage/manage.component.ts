@@ -23,7 +23,11 @@ export class ManageComponent implements OnInit {
       emailGroup: this._formBuilder.group({
         myEmail: ['', [Validators.required, Validators.email, CustomValidators.emailDomain("google.com")]],
         myEmailConfirm: ['', [Validators.required]],
-      },{ validators : MatchEmails }),
+      }, { validators: MatchEmails }),
+      passwordGroup: this._formBuilder.group({
+        myPassword: ['', [Validators.required]],
+        myPasswordConfirm: ['', [Validators.required]],
+      }, { validators: MatchPasswords }),
       myPhone: [''],
       mySkills: this._formBuilder.group({
         skillName: ['', [Validators.required]],
@@ -84,7 +88,10 @@ export class ManageComponent implements OnInit {
     'myFullName': '',
     'myEmail': '',
     'myEmailConfirm': '',
-    'emailGroup' : '',
+    'emailGroup': '',
+    'myPassword': '',
+    'myPasswordConfirm': '',
+    'passwordGroup': '',
     'myPhone': '',
     'skillName': '',
     'experienceInYears': '',
@@ -105,11 +112,20 @@ export class ManageComponent implements OnInit {
     },
     'myEmailConfirm': {
       'required': 'Confirm Email is required.',
-      
+
     },
-    'emailGroup' : {
-      'NotMatchValue' : 'Email and Confirm Email do not match'
+    'emailGroup': {
+      'NotMatchValue': 'Email and Confirm Email do not match'
     },
+    'myPassword': { 
+      'required': 'Password is required.',
+    },
+    'myPasswordConfirm': {
+      'required': 'Password Confirm is required.',
+    },
+    'passwordGroup': {
+      'NotMatchPasswords': 'Password and Confirm Password do not match'
+     },
     'myPhone': {
       'required': 'Phone is required.',
       'minlength': 'Phone must be greater than 2 characters.',
@@ -164,6 +180,18 @@ function MatchEmails(group: AbstractControl): { [Key: string]: any } | null {
   }
   else {
     return { 'NotMatchValue': true }
+  }
+
+}
+
+function MatchPasswords(group: AbstractControl): { [Key: string]: any } | null {
+  const PasswordControl = group.get("myPassword");
+  const PasswordConfirmControl = group.get("myPasswordConfirm");
+  if (PasswordControl.value === PasswordConfirmControl.value || PasswordConfirmControl.pristine) {
+    return null;
+  }
+  else {
+    return { 'NotMatchPasswords': true }
   }
 
 }
