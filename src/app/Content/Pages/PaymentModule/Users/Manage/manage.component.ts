@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from "@angular/forms";
 import { CustomValidators } from '../../../../../Core/Utilities/CustomValidations/custom.validators';
 
 @Component({
@@ -36,11 +36,11 @@ export class ManageComponent implements OnInit {
       }),
     });
 
-    // When any of the form control value in employee form changes
-    // our validation function logValidationErrors() is called
+
     this.pageModel.valueChanges.subscribe((data) => {
       this.logKeyValuePairs(this.pageModel);
     });
+
 
     this.pageModel.get('contactPreference')
       .valueChanges.subscribe((data: string) => {
@@ -50,7 +50,80 @@ export class ManageComponent implements OnInit {
   }
 
   onSubmit() {
-    this.logKeyValuePairs(this.pageModel);
+
+    // One Way to Declare Form Array - By new keyword
+    const formArray = new FormArray([
+      new FormControl('Malang', Validators.required),
+      new FormGroup({
+        country: new FormControl('', Validators.required)
+      }),
+      new FormArray([])
+    ]);
+
+    console.log(formArray.length);
+    console.log(formArray);
+
+    for (const control of formArray.controls) {
+      if (control instanceof FormControl) {
+        console.log('control is FormControl');
+      }
+      if (control instanceof FormGroup) {
+        console.log('control is FormGroup');
+      }
+      if (control instanceof FormArray) {
+        console.log('control is FormArray');
+      }
+    }
+
+
+    // Second Way to Declare Form Array - By FormBuilder
+    const formArray2 = this._formBuilder.array([
+      new FormControl('Sajjad', Validators.required),
+      new FormGroup({
+        country: new FormControl('', Validators.required)
+      }),
+      new FormArray([])
+    ]);
+
+    console.log(formArray2.length);
+    console.log(formArray2);
+
+    for (const control of formArray2.controls) {
+      if (control instanceof FormControl) {
+        console.log('control is FormControl');
+      }
+      if (control instanceof FormGroup) {
+        console.log('control is FormGroup');
+      }
+      if (control instanceof FormArray) {
+        console.log('control is FormArray');
+      }
+    }
+
+    // What the difference between Array and Group
+
+    const ByArray = this._formBuilder.array([
+      new FormControl('Sajjad', Validators.required),
+      new FormControl('Email', Validators.required),
+      new FormControl('Male', Validators.required),
+    ]);
+
+    const ByGroup = this._formBuilder.group([
+      new FormControl('Sajjad', Validators.required),
+      new FormControl('Email', Validators.required),
+      new FormControl('Male', Validators.required),
+    ]);
+
+    console.log(ByArray);
+    console.log(ByGroup);
+
+    console.log(ByArray.value);
+    console.log(ByGroup.value);
+
+
+    ByArray.push(new FormControl('Working',Validators.required));
+    console.log(ByArray.at(3).value);
+   
   }
 
   logKeyValuePairs(group: FormGroup = this.pageModel): void {
