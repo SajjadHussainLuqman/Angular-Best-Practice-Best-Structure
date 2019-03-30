@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators, AbstractControl } from "@angular/forms";
 
 @Component({
   selector: 'app-manage',
@@ -19,7 +19,7 @@ export class ManageComponent implements OnInit {
     this.pageModel = this._formBuilder.group({
       myFullName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(8)]],
       contactPreference: ['email'],
-      myEmail: ['', [Validators.required, Validators.email]],
+      myEmail: ['', [Validators.required, Validators.email, emailDomain]],
       myPhone: [''],
       mySkills: this._formBuilder.group({
         skillName: ['', [Validators.required]],
@@ -101,7 +101,8 @@ export class ManageComponent implements OnInit {
     },
     'myEmail': {
       'required': 'Email is required.',
-      'email': 'Invalid Email'
+      'email': 'Invalid Email',
+      'emailDomain' : 'Invalid Domain'
     },
     'myPhone': {
       'required': 'Phone is required.',
@@ -145,5 +146,19 @@ export class ManageComponent implements OnInit {
         proficiency: 'beginner'
       }
     });
+  }
+}
+
+function emailDomain(control: AbstractControl): {[Key:string] : any } | null
+{
+  const email : string = control.value;
+  const domain : string = email.substring(email.lastIndexOf('@') + 1);
+  if(email === '' || domain === "google.com")
+  {
+    return null;
+  }
+  else
+  {
+    return { 'emailDomain' : true };
   }
 }
