@@ -23,11 +23,11 @@ export class ManageComponent implements OnInit {
       emailGroup: this._formBuilder.group({
         myEmail: ['', [Validators.required, Validators.email, CustomValidators.emailDomain("google.com")]],
         myEmailConfirm: ['', [Validators.required]],
-      }, { validators: CustomValidators.MatchControlsValue("myEmail","myEmailConfirm") }),
+      }, { validators: CustomValidators.MatchControlsValue("myEmail", "myEmailConfirm") }),
       passwordGroup: this._formBuilder.group({
         myPassword: ['', [Validators.required]],
         myPasswordConfirm: ['', [Validators.required]],
-      }, { validators: CustomValidators.MatchControlsValue("myPassword","myPasswordConfirm") }),
+      }, { validators: CustomValidators.MatchControlsValue("myPassword", "myPasswordConfirm") }),
       myPhone: [''],
       mySkills: this._formBuilder.group({
         skillName: ['', [Validators.required]],
@@ -117,7 +117,7 @@ export class ManageComponent implements OnInit {
     'emailGroup': {
       'NotMatch': 'Email and Confirm Email do not match'
     },
-    'myPassword': { 
+    'myPassword': {
       'required': 'Password is required.',
     },
     'myPasswordConfirm': {
@@ -125,7 +125,7 @@ export class ManageComponent implements OnInit {
     },
     'passwordGroup': {
       'NotMatch': 'Password and Confirm Password do not match'
-     },
+    },
     'myPhone': {
       'required': 'Phone is required.',
       'minlength': 'Phone must be greater than 2 characters.',

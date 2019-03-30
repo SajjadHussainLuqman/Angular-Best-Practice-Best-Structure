@@ -16,16 +16,16 @@ export class CustomValidators {
         }
     }
 
-    static MatchControlsValue(Control1Name:string,Control2Name:string){
+    static MatchControlsValue(Control1Name: string, Control2Name: string) {
         return (group: AbstractControl): { [Key: string]: any } | null => {
-          const Control1 = group.get(Control1Name);
-          const Control2 = group.get(Control2Name);
-          if (Control1.value === Control2.value || Control2.pristine) {
-            return null;
-          }
-          else {
-            return { 'NotMatch': true }
-          }
+            const Control1 = group.get(Control1Name);
+            const Control2 = group.get(Control2Name);
+            if (Control1.value === Control2.value || Control2.pristine) {
+                return null;
+            }
+            else {
+                return { 'NotMatch': true }
+            }
         }
-      }
+    }
 }
