@@ -20,7 +20,10 @@ export class ManageComponent implements OnInit {
     this.pageModel = this._formBuilder.group({
       myFullName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(8)]],
       contactPreference: ['email'],
-      myEmail: ['', [Validators.required, Validators.email, CustomValidators.emailDomain("google.com")]],
+      emailGroup: this._formBuilder.group({
+        myEmail: ['', [Validators.required, Validators.email, CustomValidators.emailDomain("google.com")]],
+        myEmailConfirm: ['', [Validators.required]],
+      },{ validators : MatchEmails }),
       myPhone: [''],
       mySkills: this._formBuilder.group({
         skillName: ['', [Validators.required]],
@@ -53,30 +56,23 @@ export class ManageComponent implements OnInit {
       // Get a reference to the control using the FormGroup.get() method
       const abstractControl = group.get(key);
 
-      // If the control is an instance of FormGroup i.e a nested FormGroup
-      // then recursively call this same method (logKeyValuePairs) passing it
-      // the FormGroup so we can get to the form controls in it
+      console.log('Key = ' + key + ' && Value = ' + abstractControl.value);
+
+      // Clear the existing validation errors
+      this.formErrors[key] = '';
+      if (abstractControl && !abstractControl.valid && (abstractControl.touched || abstractControl.dirty)) {
+
+        const messages = this.validationMessages[key];
+
+        for (const errorKey in abstractControl.errors) {
+          if (errorKey) {
+            this.formErrors[key] += messages[errorKey] + ' ';
+          }
+        }
+      }
 
       if (abstractControl instanceof FormGroup) {
         this.logKeyValuePairs(abstractControl);
-        // If the control is not a FormGroup then we know it's a FormControl
-      }
-      else {
-        console.log('Key = ' + key + ' && Value = ' + abstractControl.value);
-
-        // Clear the existing validation errors
-        this.formErrors[key] = '';
-        if (abstractControl && !abstractControl.valid && (abstractControl.touched || abstractControl.dirty)) {
-
-          const messages = this.validationMessages[key];
-
-          for (const errorKey in abstractControl.errors) {
-            if (errorKey) {
-              this.formErrors[key] += messages[errorKey] + ' ';
-            }
-          }
-
-        }
       }
 
     });
@@ -87,6 +83,8 @@ export class ManageComponent implements OnInit {
   formErrors = {
     'myFullName': '',
     'myEmail': '',
+    'myEmailConfirm': '',
+    'emailGroup' : '',
     'myPhone': '',
     'skillName': '',
     'experienceInYears': '',
@@ -104,6 +102,13 @@ export class ManageComponent implements OnInit {
       'required': 'Email is required.',
       'email': 'Invalid Email',
       'emailDomain': 'Invalid Domain'
+    },
+    'myEmailConfirm': {
+      'required': 'Confirm Email is required.',
+      
+    },
+    'emailGroup' : {
+      'NotMatchValue' : 'Email and Confirm Email do not match'
     },
     'myPhone': {
       'required': 'Phone is required.',
@@ -151,3 +156,14 @@ export class ManageComponent implements OnInit {
 }
 
 
+function MatchEmails(group: AbstractControl): { [Key: string]: any } | null {
+  const emailControl = group.get("myEmail");
+  const emailConfirmControl = group.get("myEmailConfirm");
+  if (emailControl.value === emailConfirmControl.value || emailConfirmControl.pristine) {
+    return null;
+  }
+  else {
+    return { 'NotMatchValue': true }
+  }
+
+}
