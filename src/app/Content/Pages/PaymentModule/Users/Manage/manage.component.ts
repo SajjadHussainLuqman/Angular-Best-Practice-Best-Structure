@@ -23,7 +23,7 @@ export class ManageComponent implements OnInit {
       emailGroup: this._formBuilder.group({
         myEmail: ['', [Validators.required, Validators.email, CustomValidators.emailDomain("google.com")]],
         myEmailConfirm: ['', [Validators.required]],
-      }, { validators: MatchEmails }),
+      }, { validators: MatchControlsValue("myEmail","myEmailConfirm") }),
       passwordGroup: this._formBuilder.group({
         myPassword: ['', [Validators.required]],
         myPasswordConfirm: ['', [Validators.required]],
@@ -115,7 +115,7 @@ export class ManageComponent implements OnInit {
 
     },
     'emailGroup': {
-      'NotMatchValue': 'Email and Confirm Email do not match'
+      'NotMatch': 'Email and Confirm Email do not match'
     },
     'myPassword': { 
       'required': 'Password is required.',
@@ -169,19 +169,6 @@ export class ManageComponent implements OnInit {
       }
     });
   }
-}
-
-
-function MatchEmails(group: AbstractControl): { [Key: string]: any } | null {
-  const emailControl = group.get("myEmail");
-  const emailConfirmControl = group.get("myEmailConfirm");
-  if (emailControl.value === emailConfirmControl.value || emailConfirmControl.pristine) {
-    return null;
-  }
-  else {
-    return { 'NotMatchValue': true }
-  }
-
 }
 
 function MatchControlsValue(Control1Name:string,Control2Name:string){
