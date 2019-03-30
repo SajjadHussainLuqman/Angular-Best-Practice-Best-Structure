@@ -19,7 +19,7 @@ export class ManageComponent implements OnInit {
     this.pageModel = this._formBuilder.group({
       myFullName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(8)]],
       contactPreference: ['email'],
-      myEmail: ['', [Validators.required, Validators.email, emailDomain]],
+      myEmail: ['', [Validators.required, Validators.email, emailDomain("google.com")]],
       myPhone: [''],
       mySkills: this._formBuilder.group({
         skillName: ['', [Validators.required]],
@@ -102,7 +102,7 @@ export class ManageComponent implements OnInit {
     'myEmail': {
       'required': 'Email is required.',
       'email': 'Invalid Email',
-      'emailDomain' : 'Invalid Domain'
+      'emailDomain': 'Invalid Domain'
     },
     'myPhone': {
       'required': 'Phone is required.',
@@ -149,16 +149,15 @@ export class ManageComponent implements OnInit {
   }
 }
 
-function emailDomain(control: AbstractControl): {[Key:string] : any } | null
-{
-  const email : string = control.value;
-  const domain : string = email.substring(email.lastIndexOf('@') + 1);
-  if(email === '' || domain === "google.com")
-  {
-    return null;
-  }
-  else
-  {
-    return { 'emailDomain' : true };
+function emailDomain(domainName: string) {
+  return (control: AbstractControl): { [Key: string]: any } | null => {
+    const email: string = control.value;
+    const domain: string = email.substring(email.lastIndexOf('@') + 1);
+    if (email === '' || domain === domainName) {
+      return null;
+    }
+    else {
+      return { 'emailDomain': true };
+    }
   }
 }
